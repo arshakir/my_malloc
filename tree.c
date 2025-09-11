@@ -1,7 +1,9 @@
-/* Implementation taken from https://www.eecs.umich.edu/courses/eecs380/ALG/niemann/s_rbt.txt */
+/* Implementation taken from
+ * https://www.eecs.umich.edu/courses/eecs380/ALG/niemann/s_rbt.txt */
 /* red-black tree */
-#include <stddef.h>
 #include "tree.h"
+#include <stddef.h>
+#include <stdio.h>
 Node sentinel = {NIL, NIL, 0, BLACK, 0};
 
 Node *root = NIL; /* root of Red-Black tree */
@@ -307,4 +309,33 @@ Node *lower_bound(T data) {
   }
 
   return res;
+}
+
+T max_val() {
+  Node *cur = root;
+  size_t res = 0;
+  while (cur != NIL) {
+    res = cur->data;
+    cur = cur->right;
+  }
+
+  return res;
+}
+
+void p(Node* r, int d){
+  if (r == NIL){
+    return;
+  }
+
+  p(r->right, d+1);
+  for (int i=0; i < d; i++){
+    printf("    ");
+  }
+  printf("%zu\n", r->data);
+  p(r->left, d+1);
+}
+
+void print_tree(){
+  p(root, 0);
+  printf("\n\n\n");
 }
