@@ -151,11 +151,11 @@ Node *insertNode(Node *x) {
       exit(1);
   }
   x->data = data;
+  */
   x->parent = parent;
   x->left = NIL;
   x->right = NIL;
   x->color = RED;
-  */
 
   /* insert node in tree */
   if (parent) {
@@ -297,7 +297,7 @@ Node *findNode(T data) {
 Node *lower_bound(T data) {
   Node *current = root;
   Node *res = NULL;
-  while (current != NULL) {
+  while (current != NIL) {
     if (data <= current->data) {
       res = current;
       current = current->left;
