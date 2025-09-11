@@ -4,4 +4,4 @@ CFLAGS = -Wall -Wextra -g
 all: test
 
 test: 
-	$(CC) $(CFLAGS) -o test ./mymalloc.c test.c
+	$(CC) $(CFLAGS) -o test mymalloc.c test.c tree.c
