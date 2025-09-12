@@ -4,7 +4,7 @@
 #include "tree.h"
 #include <stddef.h>
 #include <stdio.h>
-Node sentinel = {NIL, NIL, 0, BLACK, 0};
+Node sentinel = {NIL, NIL, 0, BLACK, 0, 1};
 
 Node *root = NIL; /* root of Red-Black tree */
 

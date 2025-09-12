@@ -13,6 +13,7 @@ typedef struct Node_ {
   struct Node_ *parent; /* parent */
   nodeColor color;      /* node color (BLACK, RED) */
   T data; // Size of Node + space in block
+  int free;
 } Node;
 
 #define NIL &sentinel /* all leafs are sentinels */

@@ -2,9 +2,9 @@
 #include "tree.h"
 #include <assert.h>
 #include <stddef.h>
+#include <string.h>
 #include <sys/mman.h>
 #include <unistd.h>
-#include <string.h>
 
 Node *tree;
 size_t tree_size = sizeof(Node);
@@ -28,12 +28,16 @@ void *my_malloc(size_t size) {
       return NULL;
 
     block->data = alloc_size;
+    block->free = 1;
     insertNode(block);
     max_avail = alloc_size;
   }
 
   Node *closest = lower_bound(size);
-  assert(deleteNode(closest) == closest);
+
+  deleteNode(closest);
+  closest->free = 0;
+
   int redo_max = 0;
   if (max_avail == closest->data) {
     redo_max = 1;
@@ -47,6 +51,7 @@ void *my_malloc(size_t size) {
 
     Node *node2 = (void *)closest + closest->data;
     node2->data = total - closest->data;
+    node2->free = 1;
 
     insertNode(node2);
     if (redo_max) {
@@ -64,17 +69,25 @@ void *my_malloc(size_t size) {
 }
 
 void my_free(void *ptr) {
-  Node* n = ptr - tree_size;
+  Node *n = ptr - tree_size;
+  Node *n2 = (void *)n + n->data;
+
+  if (n2->free) {
+    deleteNode(n2);
+    n->data += n2->data;
+  }
+
+  n->free = 1;
   insertNode(n);
   print_tree();
 }
 
 void *my_calloc(size_t num, size_t size) {
 
-  size_t total_size = num*size;
-  void* ptr = my_malloc(total_size);
+  size_t total_size = num * size;
+  void *ptr = my_malloc(total_size);
 
-  if (ptr == NULL){
+  if (ptr == NULL) {
     return NULL;
   }
 
