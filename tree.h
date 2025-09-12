@@ -8,11 +8,11 @@ typedef size_t T; /* type of item to be stored */
 typedef enum { BLACK, RED } nodeColor;
 
 typedef struct Node_ {
-  T data; // Size of Node + space in block
   struct Node_ *left;   /* left child */
   struct Node_ *right;  /* right child */
   struct Node_ *parent; /* parent */
   nodeColor color;      /* node color (BLACK, RED) */
+  T data; // Size of Node + space in block
 } Node;
 
 #define NIL &sentinel /* all leafs are sentinels */

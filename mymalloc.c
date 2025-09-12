@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <sys/mman.h>
 #include <unistd.h>
+#include <string.h>
 
 Node *tree;
 size_t tree_size = sizeof(Node);
@@ -68,6 +69,17 @@ void my_free(void *ptr) {
   print_tree();
 }
 
-void *my_calloc(size_t num, size_t size) { return NULL; }
+void *my_calloc(size_t num, size_t size) {
+
+  size_t total_size = num*size;
+  void* ptr = my_malloc(total_size);
+
+  if (ptr == NULL){
+    return NULL;
+  }
+
+  memset(ptr, 0, total_size);
+  return ptr;
+}
 
 void *my_realloc(void *ptr, size_t size) { return NULL; }
