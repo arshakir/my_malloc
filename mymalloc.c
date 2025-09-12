@@ -2,6 +2,7 @@
 #include "tree.h"
 #include <assert.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <string.h>
 #include <sys/mman.h>
 #include <unistd.h>
@@ -9,6 +10,7 @@
 Node *tree;
 size_t tree_size = sizeof(Node);
 size_t max_avail = 0;
+#define MIN_SIZE 4 // Minimum size for a block to be created for
 
 size_t round_up(size_t size, size_t pagesize) {
   return ((size + pagesize - 1) / pagesize) * pagesize;
@@ -29,6 +31,8 @@ void *my_malloc(size_t size) {
 
     block->data = alloc_size;
     block->free = 1;
+    block->prev = NULL;
+    block->next = NULL;
     insertNode(block);
     max_avail = alloc_size;
   }
@@ -44,7 +48,7 @@ void *my_malloc(size_t size) {
   }
 
   // Either split node into 2 or allocate all
-  if (closest->data - size >= tree_size + 4) {
+  if (closest->data - size >= tree_size + MIN_SIZE) {
 
     size_t total = closest->data;
     closest->data = size + tree_size;
@@ -52,33 +56,74 @@ void *my_malloc(size_t size) {
     Node *node2 = (void *)closest + closest->data;
     node2->data = total - closest->data;
     node2->free = 1;
+    node2->prev = closest;
+    closest->next = node2;
 
     insertNode(node2);
     if (redo_max) {
-      max_avail = max_val();
+      Node *m = max_val();
+      if (m)
+        max_avail = m->data;
+      else
+        max_avail = 0;
     }
+    // printf("MAXVAL: %d\n", (int)max_val()->data);
     print_tree();
     return (void *)closest + tree_size;
   } else {
     if (redo_max) {
-      max_avail = max_val();
+      Node *m = max_val();
+      if (m)
+        max_avail = m->data;
+      else
+        max_avail = 0;
     }
+    // printf("MAXVAL: %d\n", (int)max_val()->data);
     print_tree();
     return (void *)closest + tree_size;
   }
 }
 
 void my_free(void *ptr) {
-  Node *n = ptr - tree_size;
-  Node *n2 = (void *)n + n->data;
 
-  if (n2->free) {
-    deleteNode(n2);
-    n->data += n2->data;
+  Node *n = ptr - tree_size;
+  Node *nforward = n->next;
+  Node *nback = n->prev;
+
+  if (nback && nback->free) {
+
+    deleteNode(nback);
+
+    nback->data += n->data;
+
+    if (nforward)
+      nforward->prev = nback;
+
+    nback->next = n->next;
+    n = nback;
+  }
+
+  if (nforward && nforward->free) {
+    deleteNode(nforward);
+    n->data += nforward->data;
+    n->next = nforward->next;
   }
 
   n->free = 1;
   insertNode(n);
+
+  Node *m = max_val();
+  max_avail = m->data;
+  if (max_avail == sysconf(_SC_PAGESIZE)) {
+    deleteNode(m);
+    munmap(m, m->data);
+    Node *m = max_val();
+    if (m)
+      max_avail = m->data;
+    else
+      max_avail = 0;
+  }
+  // printf("MAXVAL: %d\n", (int)max_val()->data);
   print_tree();
 }
 

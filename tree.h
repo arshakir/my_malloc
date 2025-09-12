@@ -14,6 +14,8 @@ typedef struct Node_ {
   nodeColor color;      /* node color (BLACK, RED) */
   T data; // Size of Node + space in block
   int free;
+  struct Node_ *prev;
+  struct Node_ *next;
 } Node;
 
 #define NIL &sentinel /* all leafs are sentinels */
@@ -21,5 +23,5 @@ typedef struct Node_ {
 Node *insertNode(Node *x);
 Node *deleteNode(Node *z);
 Node *lower_bound(T data);
-T max_val();
+Node* max_val();
 void print_tree();
