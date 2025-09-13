@@ -51,7 +51,7 @@ This can be implemented entirely by `my_malloc`. First get the total size by mul
 Also implemented using `my_malloc` and `my_free`. Use `my_malloc` to get a pointer to the new size, then copy over the data from the old pointer into the new one making sure to only copy the min size of either blocks.
 
 ## TODO/Improvements
-- Optimize by having different tree for other blocks
+- Optimize by having different tree for different block sizes
 - Hybrid approach like other implementations: lists for small blocks, tree for large blocks
 - Improving edge cases and error handling
 - Improving tree implementation
