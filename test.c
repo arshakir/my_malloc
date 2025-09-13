@@ -1,13 +1,13 @@
 #include "mymalloc.h"
 #include <stdio.h>
 #include <string.h>
-int main() { 
+int main() {
 
-  char* x = my_malloc(16);
-  char* a = my_malloc(20);
-  char* b = my_malloc(50);
-  char* c = my_malloc(70);
-  char* s = my_malloc(10);
+  char *x = my_malloc(16);
+  char *a = my_malloc(20);
+  char *b = my_malloc(50);
+  char *c = my_malloc(70);
+  char *s = my_malloc(10);
   strcpy(s, "hi");
   printf("%s", s);
   my_free(c);

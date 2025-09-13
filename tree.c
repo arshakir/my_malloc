@@ -8,6 +8,57 @@ Node sentinel = {NIL, NIL, 0, BLACK, 0, 0, NULL, NULL, 0};
 
 Node *root = NIL; /* root of Red-Black tree */
 
+/* lower_bound, max_val, print_tree, print_tree implemented by me */
+
+/* Added lower bound to find min node that can fit the size */
+Node *lower_bound(T data) {
+  Node *current = root;
+  Node *res = NULL;
+  while (current != NIL) {
+    if (data <= current->data) {
+      res = current;
+      current = current->left;
+    } else {
+      current = current->right;
+    }
+  }
+
+  return res;
+}
+
+// Returns the max val of the tree
+T max_val() {
+  Node *cur = root;
+  size_t res = 0;
+  while (cur != NIL) {
+    res = cur->data;
+    cur = cur->right;
+  }
+
+  return res;
+}
+
+// Helper to print tree vals
+static void p(Node *r, int d) {
+  if (r == NIL) {
+    return;
+  }
+
+  p(r->right, d + 1);
+  for (int i = 0; i < d; i++) {
+    printf("    ");
+  }
+  printf("%zu\n", r->data);
+  p(r->left, d + 1);
+}
+
+// Prints tree
+void print_tree() {
+  printf("TREE:\n");
+  p(root, 0);
+  printf("ENDTREE:\n");
+}
+
 void rotateLeft(Node *x) {
 
   /**************************
@@ -293,50 +344,4 @@ Node *findNode(T data) {
     else
       current = compLT(data, current->data) ? current->left : current->right;
   return (0);
-}
-
-/* Added lower bound to find min node that can fit the size */
-Node *lower_bound(T data) {
-  Node *current = root;
-  Node *res = NULL;
-  while (current != NIL) {
-    if (data <= current->data) {
-      res = current;
-      current = current->left;
-    } else {
-      current = current->right;
-    }
-  }
-
-  return res;
-}
-
-T max_val() {
-  Node *cur = root;
-  size_t res = 0;
-  while (cur != NIL) {
-    res = cur->data;
-    cur = cur->right;
-  }
-
-  return res;
-}
-
-void p(Node* r, int d){
-  if (r == NIL){
-    return;
-  }
-
-  p(r->right, d+1);
-  for (int i=0; i < d; i++){
-    printf("    ");
-  }
-  printf("%zu\n", r->data);
-  p(r->left, d+1);
-}
-
-void print_tree(){
-  printf("TREE:\n");
-  p(root, 0);
-  printf("ENDTREE:\n");
 }

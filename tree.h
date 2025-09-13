@@ -1,4 +1,5 @@
-/* Implementation taken from https://www.eecs.umich.edu/courses/eecs380/ALG/niemann/s_rbt.txt */
+/* Modified implementation from https://www.eecs.umich.edu/courses/eecs380/ALG/niemann/s_rbt.txt */
+
 #include <stddef.h>
 typedef size_t T; /* type of item to be stored */
 #define compLT(a, b) (a < b)
@@ -8,14 +9,21 @@ typedef size_t T; /* type of item to be stored */
 typedef enum { BLACK, RED } nodeColor;
 
 typedef struct Node_ {
+
+  //Tree Pointers
   struct Node_ *left;   /* left child */
   struct Node_ *right;  /* right child */
   struct Node_ *parent; /* parent */
+
   nodeColor color;      /* node color (BLACK, RED) */
-  T data; // Size of Node + space in block
+  T data; /* Represents total block size (tree size + available mem for use) */
   int free;
+
+  //Doubly linked list pointers to neighboring blocks
   struct Node_ *prev;
   struct Node_ *next;
+
+  //Total size of the block that was received when calling mmap
   size_t mmap_size;
 } Node;
 
