@@ -4,7 +4,7 @@
 #include "tree.h"
 #include <stddef.h>
 #include <stdio.h>
-Node sentinel = {NIL, NIL, 0, BLACK, 0, 1, NULL};
+Node sentinel = {NIL, NIL, 0, BLACK, 0, 0, NULL, NULL, 0};
 
 Node *root = NIL; /* root of Red-Black tree */
 
@@ -311,11 +311,11 @@ Node *lower_bound(T data) {
   return res;
 }
 
-Node* max_val() {
+T max_val() {
   Node *cur = root;
-  Node* res = NULL;
+  size_t res = 0;
   while (cur != NIL) {
-    res = cur;
+    res = cur->data;
     cur = cur->right;
   }
 
@@ -336,6 +336,7 @@ void p(Node* r, int d){
 }
 
 void print_tree(){
+  printf("TREE:\n");
   p(root, 0);
-  printf("\n\n\n");
+  printf("ENDTREE:\n");
 }

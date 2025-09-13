@@ -16,6 +16,7 @@ typedef struct Node_ {
   int free;
   struct Node_ *prev;
   struct Node_ *next;
+  size_t mmap_size;
 } Node;
 
 #define NIL &sentinel /* all leafs are sentinels */
@@ -23,5 +24,5 @@ typedef struct Node_ {
 Node *insertNode(Node *x);
 Node *deleteNode(Node *z);
 Node *lower_bound(T data);
-Node* max_val();
+size_t max_val();
 void print_tree();
