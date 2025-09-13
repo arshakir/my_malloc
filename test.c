@@ -1,5 +1,4 @@
 #include "mymalloc.h"
-#include <stddef.h>
 #include <stdio.h>
 #include <string.h>
 int main() { 
@@ -17,12 +16,17 @@ int main() {
   my_free(a);
   my_free(b);
 
-  //
-  // x = my_calloc(50, 50);
-  // a = my_calloc(1, 15000);
-  // my_free(x);
-  // //my_free(a);
-  //b = my_malloc(20);
-  // my_free(b);
+  x = my_malloc(20);
+  a = my_malloc(50);
+  x = my_realloc(x, 20000);
+  my_free(a);
+  my_free(x);
+
+  x = my_calloc(50, 50);
+  a = my_calloc(1, 15000);
+  my_free(x);
+  my_free(a);
+  b = my_malloc(20);
+  my_free(b);
   return 0;
 }

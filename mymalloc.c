@@ -1,7 +1,6 @@
 #include "mymalloc.h"
 #include "tree.h"
 #include <assert.h>
-#include <stddef.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/mman.h>
@@ -89,7 +88,7 @@ void my_free(void *ptr) {
   }
 
   if (nforward && nforward->free) {
-    deleteNode(nforward);
+    assert(deleteNode(nforward) == nforward);
     nforward->free = 0;
     n->data += nforward->data;
     n->next = nforward->next;
@@ -121,4 +120,28 @@ void *my_calloc(size_t num, size_t size) {
   return ptr;
 }
 
-void *my_realloc(void *ptr, size_t size) { return NULL; }
+void *my_realloc(void *ptr, size_t size) {
+
+  if (ptr == NULL) {
+    return my_malloc(size);
+  }
+
+  if (size == 0) {
+    my_free(ptr);
+    return NULL;
+  }
+
+  void *ptr2 = my_malloc(size);
+  if (ptr2 == NULL)
+    return NULL;
+
+  Node *n = ptr - tree_size;
+
+  if (n->data - tree_size < size) {
+    size = n->data - tree_size;
+  }
+
+  memcpy(ptr2, ptr, size);
+  my_free(ptr);
+  return ptr2;
+}
